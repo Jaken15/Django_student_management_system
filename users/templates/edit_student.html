@@ -1,0 +1,19 @@
+﻿{% extends "base.html" %}
+{% block title %}Edit student | Student manager{% endblock %}
+{% block content %}
+<div class="form-page">
+    <a class="back-link" href="{% url 'dashboard' %}">&larr; Back to directory</a>
+    <header class="page-heading">
+        <div><p class="eyebrow">KEEP THINGS CURRENT</p><h1>Edit student</h1><p class="muted">Update the details for {{ form.instance.student_name }}.</p></div>
+    </header>
+    <section class="card form-card" aria-labelledby="details-title">
+        <h2 id="details-title">Student details</h2>
+        <p class="muted form-intro">Fields marked Required must be completed.</p>
+        <form method="post" enctype="multipart/form-data" action="{% url 'edit_student' form.instance.pk %}">
+            {% csrf_token %}
+            {% include "student_fields.html" %}
+            <div class="form-actions"><a class="button button-secondary" href="{% url 'dashboard' %}">Cancel</a><button class="button button-primary" type="submit">Save changes</button></div>
+        </form>
+    </section>
+</div>
+{% endblock %}

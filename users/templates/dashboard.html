@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+{% extends "base.html" %}
+{% block title %}Dashboard | Student manager{% endblock %}
+{% block content %}
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <title>Edit Student</title>
+</head>
+<header class="page-heading">
+    <div>
+        <p class="eyebrow">OVERVIEW</p>
+        <h1>Your students</h1>
+        <p class="muted">A home for every student record.</p>
+    </div>
+    <a class="button button-primary" href="{% url 'add_student' %}"><span aria-hidden="true">+</span> Add student</a>
+</header>
+<section class="card directory" aria-labelledby="directory-title">
+    <div class="directory-toolbar">
+        <div>
+            <h2 id="directory-title">Student directory</h2>
+            <p class="muted">{{ students|length }} record{{ students|length|pluralize }}{% if request.GET.query %} found{% endif %}</p>
+        </div>
+        <form class="search-form" method="get" action="{% url 'search_student' %}" role="search">
+            <label class="sr-only" for="query">Search by exact student name</label>
+            <input id="query" name="query" type="search" placeholder="Exact student name" value="{{ request.GET.query|default:'' }}">
+            <button class="button button-secondary" type="submit">Search</button>
+            {% if request.GET.query %}<a class="text-link" href="{% url 'dashboard' %}">Clear</a>{% endif %}
+        </form>
+    </div>
+    {% if students %}
+    <div class="table-wrap">
+        <table>
+            <caption class="sr-only">Student records and available actions</caption>
+            <thead><tr><th scope="col">Student</th><th scope="col">Record ID</th><th scope="col" class="actions-heading">Actions</th></tr></thead>
+            <tbody>
+            {% for student in students %}
+                <tr>
+                    <td><div class="student-name"><span class="avatar" aria-hidden="true">{{ student.student_name|first|upper }}</span><strong>{{ student.student_name }}</strong></div></td>
+                    <td><span class="record-id">#{{ student.id }}</span></td>
+                    <td>
+                        <div class="row-actions">
+                            <a class="button button-small button-secondary" href="{% url 'edit_student' student.id %}" aria-label="Edit {{ student.student_name }}">Edit</a>
+                            <form method="post" action="{% url 'delete_student' student.id %}">
+                                {% csrf_token %}
+                                <button class="button button-small button-danger" type="submit" aria-label="Delete {{ student.student_name }}">Delete</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <span class="empty-mark" aria-hidden="true">S</span>
+        {% if request.GET.query %}
+            <h3>No matching students</h3>
+            <p class="muted">Try the complete student name, or return to the directory.</p>
+            <a class="button button-secondary" href="{% url 'dashboard' %}">View all students</a>
+        {% else %}
+            <h3>Your directory starts here</h3>
+            <p class="muted">Add your first student to get everything in order.</p>
+            <a class="button button-primary" href="{% url 'add_student' %}">Add first student</a>
+        {% endif %}
+    </div>
+    {% endif %}
+</section>
+{% endblock %}

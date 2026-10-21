@@ -1,0 +1,28 @@
+﻿{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Student manager{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <a class="skip-link" href="#main-content">Skip to content</a>
+    <header class="site-header">
+        <div class="header-inner">
+            <span class="brand"><span class="brand-mark" aria-hidden="true">S</span> Student manager</span>
+            {% block navigation %}
+            <nav aria-label="Main navigation">
+                <a href="{% url 'dashboard' %}">Dashboard</a>
+                <a href="{% url 'add_student' %}">Add student</a>
+            </nav>
+            {% endblock %}
+        </div>
+    </header>
+    <main id="main-content" class="container" tabindex="-1">
+        {% block content %}{% endblock %}
+    </main>
+    <footer class="site-footer">Student manager &middot; A little more organized.</footer>
+</body>
+</html>
